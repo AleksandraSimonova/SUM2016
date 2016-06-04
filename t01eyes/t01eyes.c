@@ -11,6 +11,7 @@ void DrawEye(HWND hWnd, INT x, INT y, INT R, INT R1)
   INT dx, dy;
   DOUBLE t;
   
+  
   GetCursorPos(&pt);
 
   ScreenToClient(hWnd, &pt);
@@ -40,14 +41,21 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   case WM_SIZE:
     w = LOWORD(lParam);
     h = HIWORD(lParam);
-    break;
+    if (hBm != NULL)
+      DeleteObject(hBm);
+    hDC = GetDC(hWnd);
+    hBm = CreateCompatibleBitmap(hDC, w, h);
+    ReleaseDC(hWnd, hDC);
+    SelectObject(hMemDC, hBm);
+    SendMessage(hWnd, WM_TIMER, 0, 0);
+    return 0;
   case WM_MOUSEMOVE:
     DrawEye(hWnd, 100, 50, 15, 5);
     InvalidateRect(hWnd, NULL, TRUE);
     return 0;
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
-     BitBlt(hDC, 0, w, h
+    BitBlt(hDC, 0, 0, w, h, hDC, 0, 0, SRCCOPY);
 
     EndPaint(hWnd, &ps);
     return 0;

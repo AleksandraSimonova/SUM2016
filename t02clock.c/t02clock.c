@@ -9,12 +9,17 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   PAINTSTRUCT ps;
   DOUBLE a, r;
   SYSTEMTIME t;
+  CHAR s[30];
   static INT w, h;
   static BITMAP bm;
   static HBITMAP hBm, hBmLogo;
   static HDC hMemDC, hMemDCLogo;
+  HPEN hPen, hOldPen;
+ 
+  static HFONT hFnt;
+  
 
-  HPEN hPen;
+ 
 
   switch (Msg)
   {
@@ -40,6 +45,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   case WM_DESTROY:
     KillTimer(hWnd, 30);
+    DeleteObject(hFnt);
     PostMessage(hWnd, WM_QUIT, 0, 0);
     return 0;
   case WM_CREATE: 
@@ -51,6 +57,11 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     hMemDC = CreateCompatibleDC(hDC);
     ReleaseDC(hWnd, hDC);
     SelectObject(hMemDCLogo, hBmLogo);
+    hFnt = CreateFont(30, 0, 0, 0, FW_BOLD, FALSE, FALSE, FALSE, RUSSIAN_CHARSET, 
+                     OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, 
+                     FIXED_PITCH | FF_SCRIPT,"Bookman Old Style");
+    return 0;
+  case WM_ERASEBKGND:
     return 0;
   case WM_TIMER:
     Rectangle(hMemDC, 0, 0, w + 1, h + 1);
@@ -59,14 +70,32 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     GetLocalTime(&t);
     a = t.wSecond * 2 * 3.14159265358979 / 60;
     r = bm.bmWidth / 2.2;
+    hPen = CreatePen(PS_SOLID, 2, RGB(255, 0, 255));
+    SelectObject(hMemDC, hPen);
+    
     MoveToEx(hMemDC, w / 2, h / 2, NULL);
     LineTo(hMemDC, w / 2 + sin(a) * r, h / 2 - cos(a) * r);
+    DeleteObject(hPen);
     a = t.wMinute * 2 * 3.14159265358979 / 60;
     r = bm.bmWidth / 2.2;
+    hPen = CreatePen(PS_SOLID, 4, RGB(255, 0, 255));
+    SelectObject(hMemDC, hPen);
     MoveToEx(hMemDC, w / 2, h / 2, NULL);
     LineTo(hMemDC, w / 2 + sin(a) * r, h / 2 - cos(a) * r);
-    InvalidateRect(hWnd, NULL, FALSE);
+    DeleteObject(hPen);
+    a = t.wHour * 2 * 3.14159265358979 / 12;
+    r = bm.bmWidth / 2.2;
+    hPen = CreatePen(PS_SOLID, 5, RGB(255, 0, 255));
+    SelectObject(hMemDC, hPen);
+    MoveToEx(hMemDC, w / 2, h / 2, NULL);
+    LineTo(hMemDC, w / 2 + sin(a) * r, h / 2 - cos(a) * r);
+    DeleteObject(hPen);
     
+    SetTextColor(hMemDC, RGB(130, 90, 30));
+    TextOut(hMemDCLogo, 0, 0, s,
+      sprintf(s, "Carrent Date: %02i.%02i.%i", t.wDay, t.wMonth, t.wYear));
+   
+    InvalidateRect(hWnd, NULL, FALSE);
     return 0;
   }
   return DefWindowProc(hWnd, Msg, wParam, lParam);
