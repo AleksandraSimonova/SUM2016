@@ -2,7 +2,7 @@
 #include <math.h>
 
 
-VOID Draw(HDC hDC, INT X, INT Y, DOUBLE A)
+/*VOID Draw(HDC hDC, INT X, INT Y, DOUBLE A)
 {
   INT i;
   static INT w, h;
@@ -25,14 +25,14 @@ VOID Draw(HDC hDC, INT X, INT Y, DOUBLE A)
     pt1[i].y = Y - (pt[i].x * si + pt[i].y * co);
     
   }
- /* GetCursorPos(&pt1);
-  ScreenToClient(hDC, &pt1);*/
+  GetCursorPos(&pt1);
+  ScreenToClient(hDC, &pt1);
   SelectObject(hDC, GetStockObject(DC_PEN));
   SelectObject(hDC, GetStockObject(DC_BRUSH));
   SetDCPenColor(hDC, RGB(255, 0, 0));
   SetDCBrushColor(hDC, RGB(255, 220, 220));
   Polygon(hDC, pt1, sizeof(pt) / sizeof(pt[0]));
-}
+} */
 
 
 
@@ -52,8 +52,6 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   HPEN hPen;
   HBRUSH hBr, hOldBr;
   
- 
-
   switch (Msg)
   {
   case WM_SIZE:
@@ -122,7 +120,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
     SetTextColor(hMemDC, RGB(130, 90, 30));
     TextOut(hMemDCLogo, 0, h / 2 + h / 2 * sin(clock()/2000.0), s,
             sprintf(s, "%02i.%02i.%i", t.wDay, t.wMonth, t.wMonth));*/ 
-    Draw(hMemDC, w / 2, h / 2, 200);
+    DrawSphere(hMemDC, w / 2, h /2 );
    
     InvalidateRect(hWnd, NULL, FALSE);
     return 0;

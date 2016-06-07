@@ -52,18 +52,7 @@ void Go(int Pos)
   }
   else 
   {
-    /*Go(Pos + 1);
-      SaveParity = Parity;
-    for(i = 1; i < N; i++)
-    {
-      Swap(&P[Pos], &P[i]);
-      Go(Pos + 1);
-    }
-    x = P[Pos];
-    for(i = Pos + 1; i < N; i++)
-      P[i - 1] = P[i];
-    P[N - 1] = x;
-    Parity = SaveParity;  */
+    
     Go(Pos + 1);
     for (i = Pos + 1; i < N; i++)
     {
@@ -98,5 +87,6 @@ void main( void )
 
   for (i = 0; i < sizeof(M) / sizeof(M[0]); i++)
     printf("Det(%d)[%s] = %f\n", i, M[i], EvalDeterminant(M[i]));
+  getch();
 }
 

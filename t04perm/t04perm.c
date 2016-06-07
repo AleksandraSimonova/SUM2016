@@ -4,7 +4,7 @@
 */
 #include <stdio.h>
 #define N 5
-int P[N] = {0,1, 2, 3, 4, 5};
+int P[N] = {0,1, 2, 3, 4};
 int Parity = 0;
 
 
