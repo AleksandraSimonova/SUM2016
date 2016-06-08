@@ -10,7 +10,7 @@ int N;
 double sum = 0;
 
 int Parity = 0, P[MAX];
-
+        
 void Swap( int *A, int *B )
 {
   int tmp = *A; 
@@ -43,6 +43,7 @@ void Go(int Pos)
     double prod = 1;
 
     for (i = 0; i < N; i++)
+
       prod *= A[i][P[i]];
     if (Parity == 0)
       sum += prod;
