@@ -31,7 +31,7 @@ VOID DrawSphere(HDC hDC, INT Xc, INT Yc)
     /*  G[i][j] = Rot(G[i][j], A, 30 * sin(clock() / 5000.0)); */   
     }
   }
-  for (i = 0; i < N; i++)
+  /*for (i = 0; i < N; i++)
   {
     theta = i * pi / (N - 1);
     for (j = 0; j <= M; j++)
@@ -48,8 +48,8 @@ VOID DrawSphere(HDC hDC, INT Xc, INT Yc)
     MoveToEx(hDC, x, y,NULL);
     for (j = 0; j <= M; j++)
     {
-      x = Xc + G[i][j].X;
-      y = Yc - G[i][j].Y;
+      x = Xc + G[i][0].X;
+      y = Yc - G[i][0].Y;
      LineTo(hDC, x, y);
     }
   }
@@ -60,11 +60,11 @@ VOID DrawSphere(HDC hDC, INT Xc, INT Yc)
     for (i = 1; i <= N; i++)
     {
       theta = i * pi / (N - 1);
-      x = Xc + G[i][j].X;
-      y = Yc - G[i][j].Y;
+      x = Xc + G[0][j].X;
+      y = Yc - G[0][j].Y;
       LineTo(hDC, x, y);
-    }
-  }
+    } 
+  }*/
 
   
 }
