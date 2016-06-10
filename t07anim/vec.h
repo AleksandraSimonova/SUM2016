@@ -1,4 +1,4 @@
-/* file name: vec.c
+/* file name: vec.h
  *progremmer: sa2
  *date: 08.06.2016
  */
@@ -85,14 +85,6 @@ __inline VEC VecNormalize( VEC V )
     len = sqrt(len), V.X /= len, V.Y /= len, V.Z = len;
   return V;
 }
-
-
-__inline VEC VecDotVec( VEC A, VEC B )
-{
-  return A.X * B.X + A.Y * B.Y + A.Z * B.Z);
-}
-
-
 
 __inline VEC PointTransform( VEC V, MATR M )
 {
@@ -199,7 +191,7 @@ __inline MATR MatrRotateZ( DBL AngleDegree )
 
 __inline MATR MatrRotate( DBL AngleDegree, VEC R )
 {
-  DBL A = D2R(AngleToDegree), si = sin(A), co = cos(A);
+  DBL A = D2R(AngleDegree), si = sin(A), co = cos(A);
   VEC V = VecNormalize(R);
   MATR M =
   {
@@ -231,7 +223,7 @@ __inline MATR MatrIdentity( VOID )
 __inline MATR MatrMulMatr( MATR M1, MATR M2 )
 {
   MATR r;
-
+  INT i, j, k;
   for (i = 0; i < 4; i++)
     for (j = 0; j < 4; j++)
       for (k = 0, r.A[i][j] = 0; k < 4; k++)
