@@ -18,7 +18,10 @@ typedef struct tagsa2ANIM
   INT W, H;
   HBITMAP hFrame; 
   sa2UNIT *Units[MAX_UNITS]; 
-  INT NumOfUnits; 
+  INT NumOfUnits;
+  DBL
+    GlobalTime, GlobalDeltaTime, Time, DeltaTime, FPS;
+  BOOL IsPause;
   
 } sa2ANIM;
 struct tagsa2UNIT
@@ -28,6 +31,15 @@ struct tagsa2UNIT
   VOID (* Response)(sa2UNIT *Uni, sa2ANIM *Ani);
   VOID (* Render)(sa2UNIT *Uni, sa2ANIM *Ani);
 } ;
+__inline DBL Rnd0( VOID )
+{
+  return (DBL)rand() / RAND_MAX;
+} 
+__inline DBL Rnd1( VOID )
+{
+  return 2.0 * rand() / RAND_MAX - 1;
+}
+
 extern sa2ANIM SA2_Anim;
 VOID  SA2_AnimInit(hWnd);
 VOID  SA2_AnimClose(VOID);

@@ -183,15 +183,15 @@
 				>
 			</File>
 			<File
-				RelativePath=".\BALL.C"
-				>
-			</File>
-			<File
 				RelativePath=".\MAIN.C"
 				>
 			</File>
 			<File
 				RelativePath=".\t07anim.c"
+				>
+			</File>
+			<File
+				RelativePath=".\U_CLOCK.C"
 				>
 			</File>
 			<File
@@ -214,6 +214,10 @@
 			</File>
 			<File
 				RelativePath=".\def.h"
+				>
+			</File>
+			<File
+				RelativePath=".\units.h"
 				>
 			</File>
 			<File
