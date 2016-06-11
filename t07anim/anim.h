@@ -1,6 +1,6 @@
 /* file name: anim.h
  *progremmer: sa2
- *date: 08.06.2016
+ *date: 11.06.2016
  */
 #ifndef  __ANIM_H_
 #define  __ANIM_H_
@@ -28,6 +28,18 @@ struct tagsa2UNIT
   VOID (* Response)(sa2UNIT *Uni, sa2ANIM *Ani);
   VOID (* Render)(sa2UNIT *Uni, sa2ANIM *Ani);
 } ;
+extern sa2ANIM SA2_Anim;
+VOID  SA2_AnimInit(hWnd);
+VOID  SA2_AnimClose(VOID);
+VOID  SA2_AnimResize(W, H);
+VOID  SA2_AnimCopyFrame(HDC hDC);
+VOID  SA2_AnimRender(VOID);
+VOID  SA2_AnimAddUnit(sa2UNIT *Uni);
+VOID SA2_AnimDoExit( VOID );
+VOID SA2_AnimFlipFullScren( VOID );
+sa2UNIT * SA2_AnimUnitCreate( INT Size );
+
+
 #endif
     
 

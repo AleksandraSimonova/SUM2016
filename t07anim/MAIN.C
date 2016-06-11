@@ -1,6 +1,6 @@
 /* file name: main.c
  *progremmer: sa2
- *date: 10.06.2016
+ *date: 11.06.2016
  */
  
 #include "def.h"
@@ -13,6 +13,7 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   static INT W, H;
   HDC hDC;
   static HDC hMemDC;
+  PAINTSTRUCT ps;
   SetDbgMemHooks();
   switch (Msg)
   {
@@ -20,23 +21,29 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
       
       return 0;
     case WM_CREATE:
-     SetTimer(hWnd, 30, 10, NULL);SetTimer(hWnd, 30, 10, NULL);
+     SetTimer(hWnd, 30, 10, NULL);
+     SA2_AnimInit(hWnd);
       return 0;
     case WM_SIZE:
-      W = LOWORD(lParam);
-      H = HIWORD(lParam);
+     SA2_AnimResize(LOWORD(lParam), HIWORD(lParam));
+     SendMessage(hWnd, WM_TIMER, 0, 0);
       return 0;
     case WM_TIMER:
-     Rectangle(hMemDC, 0, 0, W + 1, H + 1);
+     SA2_AnimRender();
      InvalidateRect(hWnd, NULL, FALSE);
       return 0;
     case WM_ERASEBKGND:
       return 0;
     case WM_PAINT:
-      
+    hDC = BeginPaint(hWnd, &ps);
+    SA2_AnimCopyFrame(hDC);   
+    EndPaint(hWnd, &ps);
+   
       return 0;
     case WM_DESTROY:
+     SA2_AnimClose();
      KillTimer(hWnd, 30); 
+     PostQuitMessage(0);
       return 0;
 
   }
