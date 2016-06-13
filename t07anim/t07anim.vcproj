@@ -191,11 +191,19 @@
 				>
 			</File>
 			<File
+				RelativePath=".\RENDER.C"
+				>
+			</File>
+			<File
 				RelativePath=".\t07anim.c"
 				>
 			</File>
 			<File
 				RelativePath=".\U_CLOCK.C"
+				>
+			</File>
+			<File
+				RelativePath=".\U_CUBE.C"
 				>
 			</File>
 			<File

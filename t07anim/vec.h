@@ -82,7 +82,7 @@ __inline VEC VecNormalize( VEC V )
 {
   DBL len = VecDotVec(V, V);
   if(len != 1 && len != 0)
-    len = sqrt(len), V.X /= len, V.Y /= len, V.Z = len;
+    len = sqrt(len), V.X /= len, V.Y /= len, V.Z /= len;
   return V;
 }
 
@@ -111,6 +111,14 @@ __inline VEC PointTransform4( VEC V, MATR M )
     (V.X * M.A[0][1] + V.Y * M.A[1][1] + V.Z * M.A[2][1] + M.A[3][1]) / w,
     (V.X * M.A[0][2] + V.Y * M.A[1][2] + V.Z * M.A[2][2] + M.A[3][2]) / w);
 }
+__inline VEC VecMulMatr( VEC V, MATR M )
+{
+  DBL w = V.X * M.A[0][3] + V.Y * M.A[1][3] + V.Z * M.A[2][3] + M.A[3][3];
+
+  return VecSet((V.X * M.A[0][0] + V.Y * M.A[1][0] + V.Z * M.A[2][0] + M.A[3][0]) / w,
+                (V.X * M.A[0][1] + V.Y * M.A[1][1] + V.Z * M.A[2][1] + M.A[3][1]) / w,
+                (V.X * M.A[0][2] + V.Y * M.A[1][2] + V.Z * M.A[2][2] + M.A[3][2]) / w);
+}  
 
 __inline MATR MatrTranslate( VEC D )
 {

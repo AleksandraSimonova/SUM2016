@@ -1,6 +1,6 @@
 /* file name: anim.c
  *progremmer: sa2
- *date: 11.06.2016
+ *date: 13.06.2016
  */
 #include <stdio.h>
 #include "anim.h"
@@ -32,6 +32,18 @@ VOID SA2_AnimInit( HWND hWnd )
   QueryPerformanceCounter(&t);
   SA2_StartTime = SA2_OldTime = SA2_OldTimeFPS = t. QuadPart;
   SA2_PauseTime = 0;
+
+
+  SA2_RndMatrWorld  = MatrIdentity();
+  SA2_RndMatrView = MatrView(VecSet(15, 15, 15), VecSet(0, 0, 0), VecSet(0, 1, 0));
+  SA2_RndMatrProj = MatrFrustum(-1, 1, -1, 1, 1, 100);
+
+
+  SA2_RndProjDist = 1;
+  SA2_RndFarClip = 500;
+  SA2_RndProjSize = 1;
+
+
 }
 VOID  SA2_AnimClose( VOID )
 {
@@ -59,6 +71,8 @@ VOID  SA2_AnimResize( INT W, INT H )
   SA2_Anim.hFrame = CreateCompatibleBitmap(hDC, W, H);
   ReleaseDC(SA2_Anim.hWnd, hDC);
   SelectObject(SA2_Anim.hDC, SA2_Anim.hFrame); 
+
+  SA2_RndSetProj();
 }
 VOID  SA2_AnimCopyFrame( HDC hDC )
 {
@@ -144,13 +158,11 @@ VOID  SA2_AnimRender(VOID)
       }
     }
   }
-  SA2_RndMatrWorld  = MatrIdentity();
-  SA2_RndMatrView = MatrView(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 0, 0));
-  SA2_RndMatrProj = MatrFrustum;
 
 
   for (i = 0; i < SA2_Anim.NumOfUnits; i++)
-  SA2_Anim.Units[i]->Response(SA2_Anim.Units[i], &SA2_Anim);
+    SA2_Anim.Units[i]->Response(SA2_Anim.Units[i], &SA2_Anim);
+
   SelectObject(SA2_Anim.hDC, GetStockObject(NULL_PEN));
   SelectObject(SA2_Anim.hDC, GetStockObject(DC_BRUSH));
   SetDCBrushColor(SA2_Anim.hDC, RGB(100, 155, 220));

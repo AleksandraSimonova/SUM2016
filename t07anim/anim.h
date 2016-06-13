@@ -50,10 +50,29 @@ __inline DBL Rnd1( VOID )
 {
   return 2.0 * rand() / RAND_MAX - 1;
 }
+extern INT SA2_MouseWheel;
 extern MATR 
-      SA2_RndMatrWorld ;
-      SA2_RndMatrView;
+      SA2_RndMatrWorld,
+      SA2_RndMatrView,
       SA2_RndMatrProj;
+extern DBL
+  SA2_RndProjDist, /* Near clip plane */
+  SA2_RndFarClip,  /* Far clip plane */
+  SA2_RndProjSize; /* Project plane size */
+
+typedef struct
+{
+  VEC *P;          /* Primitive points array */
+  INT NumOfP;      /* Point array size */
+  INT (*Edges)[2]; /* Edges array - array of point pairs */
+  INT NumOfE;      /* Edges array size */
+} sa2PRIM;
+
+VOID SA2_RndSetProj( VOID );
+
+
+VOID SA2_RndPrimDraw( sa2PRIM *Pr );
+
 extern INT S2_Anim;
 extern sa2ANIM SA2_Anim;
 VOID  SA2_AnimInit( HWND hWnd );

@@ -49,7 +49,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   UpdateWindow(hWnd);
 
   SA2_AnimAddUnit(SA2_UnitCreateBall());
-
+  SA2_AnimAddUnit(SA2_UnitCreateCube());
   while (GetMessage(&msg, NULL, 0, 0))
     DispatchMessage(&msg);
   return 30;
@@ -83,7 +83,7 @@ LRESULT CALLBACK SA2_MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   
   case WM_MOUSEWHEEL:
-/*    SA2_MouseWheel += (SHORT)HIWORD(wParam);    */
+    SA2_MouseWheel += (SHORT)HIWORD(wParam);    
     return 0;
   
   case WM_ERASEBKGND:
