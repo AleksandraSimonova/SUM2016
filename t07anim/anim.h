@@ -22,6 +22,17 @@ typedef struct tagsa2ANIM
   DBL
     GlobalTime, GlobalDeltaTime, Time, DeltaTime, FPS;
   BOOL IsPause;
+  INT 
+    Mx, My, Mz, Mdx, Mdy, Mdz;
+  BYTE 
+    Keys[256],
+    OldKeys[256],
+    KeysClick[256];
+  BYTE
+    JBut[32];
+  INT JPov;
+  DBL
+     JX, JY, JZ, JR;
   
 } sa2ANIM;
 struct tagsa2UNIT
@@ -39,14 +50,18 @@ __inline DBL Rnd1( VOID )
 {
   return 2.0 * rand() / RAND_MAX - 1;
 }
-
+extern MATR 
+      SA2_RndMatrWorld ;
+      SA2_RndMatrView;
+      SA2_RndMatrProj;
+extern INT S2_Anim;
 extern sa2ANIM SA2_Anim;
-VOID  SA2_AnimInit(hWnd);
-VOID  SA2_AnimClose(VOID);
-VOID  SA2_AnimResize(W, H);
-VOID  SA2_AnimCopyFrame(HDC hDC);
-VOID  SA2_AnimRender(VOID);
-VOID  SA2_AnimAddUnit(sa2UNIT *Uni);
+VOID  SA2_AnimInit( HWND hWnd );
+VOID  SA2_AnimClose( VOID );
+VOID  SA2_AnimResize( INT W, INT H );
+VOID  SA2_AnimCopyFrame( HDC hDC );
+VOID  SA2_AnimRender( VOID );
+VOID  SA2_AnimAddUnit( sa2UNIT *Uni );
 VOID SA2_AnimDoExit( VOID );
 VOID SA2_AnimFlipFullScren( VOID );
 sa2UNIT * SA2_AnimUnitCreate( INT Size );

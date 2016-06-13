@@ -6,8 +6,9 @@
 #include "anim.h"
 #include <mmsystem.h>
 #pragma comment(lib, "winmm")
+#define SA2_GET_JOYSTIC_AXIS(A) \ (2.0 * (ji.dw##A##pos - jc.dw##A##min) / (ji.dw##A##pos - jc.dw##A##min) - 1) - 1)
 
-
+INT SA2_MouseWheel;
 sa2ANIM SA2_Anim;
 static UNIT64;
   SA2_StartTime;
@@ -17,7 +18,7 @@ static UNIT64;
   SA2_TimePerSec;
   SA2_FrameCounter;
 
-VOID  SA2_AnimInit(hWnd)
+VOID SA2_AnimInit( HWND hWnd )
 {
   HDC hDC;
   LARGE_INTEGER t;
@@ -25,9 +26,14 @@ VOID  SA2_AnimInit(hWnd)
   SA2_Anim.hWnd = hWnd;
   hDC = GetDC(hWnd);
   SA2_Anim.hDC = CreateCompatibleDC(hDC);
-  ReleaseDC(hWnd, hDC);    
+  ReleaseDC(hWnd, hDC);
+  QueryPerformanceFrequency(&t);
+  SA2_TimePerSec = t. QuadPart;
+  QueryPerformanceCounter(&t);
+  SA2_StartTime = SA2_OldTime = SA2_OldTimeFPS = t. QuadPart;
+  SA2_PauseTime = 0;
 }
-VOID  SA2_AnimClose(VOID)
+VOID  SA2_AnimClose( VOID )
 {
   INT i;
   for (i = 0; i < SA2_Anim.NumOfUnits; i++)
@@ -42,28 +48,31 @@ VOID  SA2_AnimClose(VOID)
    
 
 }
-VOID  SA2_AnimResize(W, H)
+VOID  SA2_AnimResize( INT W, INT H )
 {
   HDC hDC;
   SA2_Anim.W = W;
   SA2_Anim.H = H;
- if (SA2_Anim.hFrame != NULL)
+  if (SA2_Anim.hFrame != NULL)
       DeleteObject(SA2_Anim.hFrame);
-    hDC = GetDC(SA2_Anim.hWnd);
-    ReleaseDC(SA2_Anim.hWnd, hDC);
-    SelectObject(SA2_Anim.hDC, SA2_Anim.hFrame); 
-    
+  hDC = GetDC(SA2_Anim.hWnd);
+  SA2_Anim.hFrame = CreateCompatibleBitmap(hDC, W, H);
+  ReleaseDC(SA2_Anim.hWnd, hDC);
+  SelectObject(SA2_Anim.hDC, SA2_Anim.hFrame); 
 }
-VOID  SA2_AnimCopyFrame(HDC hDC)
+VOID  SA2_AnimCopyFrame( HDC hDC )
 {
   BitBlt(hDC, 0, 0, SA2_Anim.W, SA2_Anim.H, SA2_Anim.hDC, 0, 0, SRCCOPY);
 }
 VOID  SA2_AnimRender(VOID)
 {
- 
   INT i;
   LARGE_INTEGER t;
+  POINT pt;
+
   SA2_FrameCounter++;
+
+  /* Update timer */
   QueryPerformanceCounter(&t);
   SA2_Anim.GlobalTime = (DBL)(t.QuadPart - SA2_StartTime) / SA2_TimePerSec;
   SA2_Anim.GlobalDeltaTime = (DBL)(t.QuadPart - SA2_OldTime) / SA2_TimePerSec;
@@ -87,6 +96,58 @@ VOID  SA2_AnimRender(VOID)
     SA2_FrameCounter = 0;
   }
   SA2_OldTime = t.QuadPart;
+
+  /* Update keyboard */
+  GetKeyboardState(SA2_Anim.Keys);
+  for (i = 0; i < 256; i++)
+  {
+    SA2_Anim.Keys[i] >>= 7;
+    if(!SA2_Anim.OldKeys[i] && SA2_Anim.Keys[i])
+      SA2_Anim.KeysClick[i] = TRUE;
+    else
+      SA2_Anim.KeysClick[i] = FALSE;
+  }
+  memcpy(SA2_Anim.OldKeys, SA2_Anim.Keys, 256);
+
+  /* Update mouse */
+  GetCursorPos(&pt);
+  ScreenToClient(SA2_Anim.hWnd, &pt);
+  SA2_Anim.Mdx = pt.x - SA2_Anim.Mx;
+  SA2_Anim.Mdy = pt.y - SA2_Anim.My;
+  SA2_Anim.Mx = pt.x;
+  SA2_Anim.My = pt.y;
+
+  /* Update joystick */
+  if (joyGetNumDevs() > 0)
+  {
+    JOYCAPS jc;
+
+    if (joyGetDevCaps(JOYSTICKID1, &jc, sizeof(jc)) == JOYERR_NOERROR)
+    {
+      
+      JOYINFOEX ji;
+      ji.dwSize = sizeof(JOYINFOEX);
+      ji.dwFlags = JOY_RETURNALL;
+      if (joyGetPosEx(JOYSTICKID1, &ji) == JOYERR_NOERROR)
+      {
+         /*buttons*/
+        for (i = 0; i < 32; i++)
+          SA2_Anim.JBut[i] = (ji.dwButtons >> i) & 1;
+          
+
+        /*axes*/
+       /*  SA2_Anim.JX = SA2_GET_JOYSTIC_AXIS(X);
+         SA2_Anim.JY = SA2_GET_JOYSTIC_AXIS(Y);    
+         SA2_Anim.JZ = SA2_GET_JOYSTIC_AXIS(Z);
+         SA2_Anim.JR = SA2_GET_JOYSTIC_AXIS(R);
+         SA2_Anim.JPov = ji.dwPOV == 0xFFFF ? 0 : ji.dwPOV / 4500 + 1;         */
+      }
+    }
+  }
+  SA2_RndMatrWorld  = MatrIdentity();
+  SA2_RndMatrView = MatrView(VecSet(5, 5, 5), VecSet(0, 0, 0), VecSet(0, 0, 0));
+  SA2_RndMatrProj = MatrFrustum;
+
 
   for (i = 0; i < SA2_Anim.NumOfUnits; i++)
   SA2_Anim.Units[i]->Response(SA2_Anim.Units[i], &SA2_Anim);
@@ -117,5 +178,14 @@ VOID  SA2_AnimAddUnit(sa2UNIT *Uni)
     
   }
 }
+VOID SA2_AnimDoExit( VOID )
+{
+  static BOOL IsExit = FALSE;
+  if(IsExit)
+    return;
+  IsExit = TRUE;
+  PostMessage(SA2_Anim.hWnd, WM_CLOSE, 0, 0);
+}
+
 
 

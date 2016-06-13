@@ -16,7 +16,8 @@ static VOID SA2_UnitClose( sa2UNIT *Uni, sa2ANIM *Ani )
 } 
 static VOID SA2_UnitResponse( sa2UNIT *Uni, sa2ANIM *Ani )
 {
-  
+   
+
 } 
  
 static VOID SA2_UnitRender( sa2UNIT *Uni, sa2ANIM *Ani )
