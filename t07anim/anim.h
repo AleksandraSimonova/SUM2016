@@ -67,7 +67,23 @@ typedef struct
   INT (*Edges)[2]; /* Edges array - array of point pairs */
   INT NumOfE;      /* Edges array size */
 } sa2PRIM;
+typedef struct 
+{
+  FLT R, G, B, A;
+} sa2COLOR;
 
+extern MATR SA2_RndMatrWorld, SA2_RndMatrView, SA2_RndMatrProj;
+extern DBL SA2_RndProjSize, SA2_RndProjDist, SA2_RndFarClip;
+VOID SA2_RndSetProj( VOID );
+
+
+VOID SA2_RndPrimDraw( sa2PRIM *Pr );
+
+
+VOID SA2_RndPrimFree( sa2PRIM *Pr );
+
+
+BOOL SA2_RndPrimLoad( sa2PRIM *Pr, CHAR *FileName );
 VOID SA2_RndSetProj( VOID );
 
 

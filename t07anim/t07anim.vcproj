@@ -187,6 +187,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\LOADPRIM.C"
+				>
+			</File>
+			<File
 				RelativePath=".\MAIN.C"
 				>
 			</File>

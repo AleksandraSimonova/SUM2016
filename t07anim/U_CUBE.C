@@ -4,6 +4,8 @@
  */
 #include <time.h>                   
 
+
+
 #include "anim.h"
 
 /* Ball unit representation type */
@@ -12,7 +14,8 @@ typedef struct
   sa2UNIT;         /* Base unit fields */
   VEC Pos;         /* Cube position */
   DBL TimerShift;  /* Timer shift phase value*/
-  DBL TimerSpeed;  /* Timer speed value*/
+  DBL TimerSpeed; 
+  sa2PRIM Pr;  /* Timer speed value*/
 } sa2UNIT_CUBE;
 
 /* Cube points */
@@ -56,6 +59,7 @@ static VOID SA2_UnitInit( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
   Uni->Pos = VecSet(Rnd0() * 5, Rnd0() * 5, Rnd0() * 5);
   Uni->TimerShift = Rnd1() * 59;
   Uni->TimerSpeed = Rnd1() * 8;
+  SA2_RndPrimLoad(&Uni->Pr, "modela\\cow.g3d");
 } /* End of 'SA2_UnitInit' function */
 
 /* Unit cube deinitialization function.
@@ -68,6 +72,7 @@ static VOID SA2_UnitInit( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
  */
 static VOID SA2_UnitClose( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
 {
+  SA2_RndPrimFree(&Uni->Pr);
 } /* End of 'SA2_UnitClose' function */
 
 /* Unit cube inter frame events handle function.
@@ -80,6 +85,11 @@ static VOID SA2_UnitClose( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
  */
 static VOID SA2_UnitResponse( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
 {
+  if (Ani ->Keys[VK_SPACE])
+    SA2_AnimAddUnit(SA2_UnitCreateBall());
+ /* if (Ani ->Keys"C")
+    SA2_AnimAddUnit(SA2_UnitCreateCube());   */
+
 } /* End of 'SA2_UnitResponse' function */
 
 /* Unit render function.
@@ -96,7 +106,7 @@ static VOID SA2_UnitRender( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
                      MatrMulMatr(MatrRotateY((Uni->TimerSpeed * Ani->Time) * 30 + Uni->TimerShift),
                                  MatrTranslate(VecAddVec(Uni->Pos,
                                                          VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3)))));
-  SA2_RndPrimDraw(&Cube);
+  SA2_RndPrimDraw(&Uni->Pr);
 } /* End of 'SA2_UnitRender' function */
 
 /* Unit cube creation function.

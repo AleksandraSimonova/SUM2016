@@ -78,4 +78,14 @@ VOID SA2_RndPrimDraw( sa2PRIM *Pr )
   free(pts);
 } /* End of 'SA2_RndPrimDraw' function */
 
+VOID SA2_RndPrimFree( sa2PRIM *Pr )
+{
+  if (Pr->P != NULL)
+    free(Pr->P);
+  if (Pr->Edges != NULL)
+    free(Pr->Edges);
+  memset(Pr, 0, sizeof(sa2PRIM));
+} /* End of 'VG4_RndPrimFree' function */
+
+
 /* END OF 'RENDER.C' FILE */
