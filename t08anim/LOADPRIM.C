@@ -12,10 +12,12 @@ BOOL SA2_RndPrimLoad(sa2PRIM * Pr, CHAR *FileName)
   DWORD Sign;
   INT NumOfPrimitives;
   CHAR MtlFile[300];
-  INT NumOfP;
+  INT NumOfV;
   INT NumOfI;
   CHAR Mtl[300];
   INT p;
+  sa2VERTEX *V;
+  INT *I;
 
   memset(Pr, 0, sizeof(sa2PRIM));
 
@@ -28,10 +30,10 @@ BOOL SA2_RndPrimLoad(sa2PRIM * Pr, CHAR *FileName)
    *   4b NumOfPrimitives       INT NumOfPrimitives;
    *   300b material file name: CHAR MtlFile[300];
    *   repeated NumOfPrimitives times:
-   *     4b INT NumOfP; - vertex count
+   *     4b INT NumOfV; - vertex count
    *     4b INT NumOfI; - index (triangles * 3) count
    *     300b material name: CHAR Mtl[300];
-   *     repeat NumOfP times - vertices:
+   *     repeat NumOfV times - vertices:
    *         !!! float point -> FLT
    *       typedef struct
    *       {
@@ -54,38 +56,75 @@ BOOL SA2_RndPrimLoad(sa2PRIM * Pr, CHAR *FileName)
   for (p = 0; p < NumOfPrimitives; p++)
   {
     /* Read primitive info */
-    fread(&NumOfP, 4, 1, F);
+    fread(&NumOfV, 4, 1, F);
     fread(&NumOfI, 4, 1, F);
     fread(Mtl, 1, 300, F);
 
     /* Allocate memory for primitive */
-    if ((Pr->V = malloc(sizeof(sa2VERTEX) * NumOfP)) == NULL)
+    if ((V = malloc(sizeof(sa2VERTEX) * NumOfV)) == NULL)
     {
       fclose(F);
       return FALSE;
     }
-    if ((Pr->I = malloc(sizeof(INT) * NumOfI)) == NULL)
+    if ((I = malloc(sizeof(INT) * NumOfI)) == NULL)
     {
-      free(Pr->V);
-      Pr->V = NULL;
+      free(V);
+      V = NULL;
       fclose(F);
       return FALSE;
     }
-    Pr->NumOfV = NumOfP;
     Pr->NumOfI = NumOfI;
-    fread(Pr->V, sizeof(sa2VERTEX), NumOfP, F);
-    fread(Pr->I, sizeof(INT), NumOfI, F);
-    if (Pr->NumOfV > 0)
-    {
-      INT i;
+    fread(V, sizeof(sa2VERTEX), NumOfV, F);
+    fread(I, sizeof(INT), NumOfI, F);
 
-      for (i = 0; i < Pr->NumOfV; i++)
-        Pr->V[i].C = Vec4Set(Pr->V[i].N.X / 2 + 0.5,
-                             Pr->V[i].N.Y / 2 + 0.5,
-                             Pr->V[i].N.Z / 2 + 0.5, 1); /* Vec4Set(Rnd0(), Rnd0(), Rnd0(), 1); */
-    }
+    /* Create OpenGL buffers */
+    glGenVertexArrays(1, &Pr->VA);
+    glGenBuffers(1, &Pr->VBuf);
+    glGenBuffers(1, &Pr->IBuf);
+
+    /* Activate vertex array */
+    glBindVertexArray(Pr->VA);
+    /* Activate vertex buffer */
+    glBindBuffer(GL_ARRAY_BUFFER, Pr->VBuf);
+    /* Store vertex data */
+    glBufferData(GL_ARRAY_BUFFER, sizeof(sa2VERTEX) * NumOfV, V, GL_STATIC_DRAW);
+
+    /* Setup data order */
+    /*                    layout,
+     *                      components count,
+     *                          type
+     *                                    should be normalize,
+     *                                           vertex structure size in bytes (stride),
+     *                                               offset in bytes to field start */
+    glVertexAttribPointer(0, 3, GL_FLOAT, FALSE, sizeof(sa2VERTEX),
+                          (VOID *)0); /* position */
+    glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, sizeof(sa2VERTEX),
+                          (VOID *)sizeof(VEC)); /* texture coordinates */
+    glVertexAttribPointer(2, 3, GL_FLOAT, FALSE, sizeof(sa2VERTEX),
+                          (VOID *)(sizeof(VEC) + sizeof(VEC2))); /* normal */
+    glVertexAttribPointer(3, 4, GL_FLOAT, FALSE, sizeof(sa2VERTEX),
+                          (VOID *)(sizeof(VEC) * 2 + sizeof(VEC2))); /* color */
+
+    /* Enable used attributes */
+    glEnableVertexAttribArray(0);
+    glEnableVertexAttribArray(1);
+    glEnableVertexAttribArray(2);
+    glEnableVertexAttribArray(3);
+
+    /* Indices */
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Pr->IBuf);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INT) * NumOfI, I, GL_STATIC_DRAW);
+
+    /* Disable vertex array */
+    glBindVertexArray(0);
+
+    free(V);
+    free(I);
     break;
   }
   fclose(F);
   return TRUE;
-}
+} /* End of 'SA2_RndPrimLoad' function */
+
+/* END OF 'LOADPRIM.C' FILE */
+

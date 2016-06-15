@@ -199,6 +199,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\SHADERS.C"
+				>
+			</File>
+			<File
 				RelativePath=".\U_BALL.C"
 				>
 			</File>

@@ -1,4 +1,4 @@
-/* file name: U_BALL.C
+/* file name: U_CUBE.C
  *progremmer: sa2
  *date: 08.06.2016
  */

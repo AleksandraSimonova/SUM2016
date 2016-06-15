@@ -18,6 +18,8 @@ DBL
   SA2_RndFarClip,  /* Far clip plane */
   SA2_RndProjSize; /* Project plane size */
 
+UINT SA2_RndPrg = 0;
+
 /* Setup projection function.
  * ARGUMENTS: None.
  * RETURNS: None.
@@ -46,7 +48,7 @@ VOID SA2_RndSetProj( VOID )
  */
 VOID SA2_RndPrimDraw( sa2PRIM *Pr )
 {
-  INT i;
+  INT loc;
   MATR M;
 
   /* Build transform matrix */
@@ -54,22 +56,36 @@ VOID SA2_RndPrimDraw( sa2PRIM *Pr )
     MatrMulMatr(SA2_RndMatrView, SA2_RndMatrProj));
   glLoadMatrixf(M.A[0]);
 
-  /* Draw all lines */
-  glBegin(GL_TRIANGLES);
-  for (i = 0; i < Pr->NumOfI; i++)
-  {
-    glColor3fv(&Pr->V[Pr->I[i]].C.R);
-    glVertex3fv(&Pr->V[Pr->I[i]].P.X);
-  }
-  glEnd();
+  glUseProgram(SA2_RndPrg);
+
+  /* Setup global variables */
+  if ((loc = glGetUniformLocation(SA2_RndPrg, "MatrWorld")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, SA2_RndMatrWorld.A[0]);
+  if ((loc = glGetUniformLocation(SA2_RndPrg, "MatrView")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, SA2_RndMatrView.A[0]);
+  if ((loc = glGetUniformLocation(SA2_RndPrg, "MatrProj")) != -1)
+    glUniformMatrix4fv(loc, 1, FALSE, SA2_RndMatrProj.A[0]);
+  if ((loc = glGetUniformLocation(SA2_RndPrg, "Time")) != -1)
+    glUniform1f(loc, SA2_Anim.Time);
+
+
+  /* Activete primitive vertex array */            
+  glBindVertexArray(Pr->VA);
+  /* Activete primitive index buffer */
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Pr->IBuf);
+  /* Draw primitive */
+  glDrawElements(GL_TRIANGLES, Pr->NumOfI, GL_UNSIGNED_INT, NULL);
+  glUseProgram(0);
 } /* End of 'SA2_RndPrimDraw' function */
 
 VOID SA2_RndPrimFree( sa2PRIM *Pr )
 {
-  if (Pr->V != NULL)
-    free(Pr->V);
-  if (Pr->I != NULL)
-    free(Pr->I);
+  glBindVertexArray(Pr->VA);                         
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glDeleteBuffers(1, &Pr->VBuf);
+  glBindVertexArray(0);
+  glDeleteVertexArrays(1, &Pr->VA);
+  glDeleteBuffers(1, &Pr->IBuf);
   memset(Pr, 0, sizeof(sa2PRIM));
 } /* End of 'VG4_RndPrimFree' function */
 

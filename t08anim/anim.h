@@ -85,9 +85,9 @@ typedef struct
 
 typedef struct
 {
-  sa2VERTEX *V;     /* Primitive vertex array */
-  INT NumOfV;       /* Point array size */
-  INT *I;           /* Facets index array */
+  INT VA;
+  INT VBuf;
+  INT IBuf; 
   INT NumOfI;       /* Facets index array size */
 } sa2PRIM;
 
