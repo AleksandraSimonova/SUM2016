@@ -1,6 +1,6 @@
 /* file name: anim.c
  *progremmer: sa2
- *date: 13.06.2016
+ *date: 15.06.2016
  */
 #include <stdio.h>
 
@@ -75,6 +75,7 @@ VOID SA2_AnimInit( HWND hWnd )
 
   glClearColor(0.3, 0.5, 0.7, 1);
   glEnable(GL_DEPTH_TEST);
+  SA2_RndPrg = SA2_RndShaderLoad("a");
   /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
 }
 
@@ -90,7 +91,7 @@ VOID  SA2_AnimClose( VOID )
   }
   SA2_Anim.NumOfUnits = 0;
 
-
+  SA2_RndShaderFree(SA2_RndPrg);
   wglMakeCurrent(NULL, NULL);
   wglDeleteContext(SA2_Anim.hGLRC);
 

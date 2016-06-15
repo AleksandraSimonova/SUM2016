@@ -1,6 +1,6 @@
  /* file name: vec.h
  *progremmer: sa2
- *date: 08.06.2016
+ *date: 15.06.2016
  */
 #ifndef  __VEC_H_ 
 

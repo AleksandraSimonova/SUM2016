@@ -1,6 +1,6 @@
 /* file name: U_CONTROL.C
  *progremmer: sa2
- *date: 08.06.2016
+ *date: 15.06.2016
  */
 #include <time.h>                   
 

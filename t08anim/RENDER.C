@@ -1,6 +1,6 @@
 /* FILE NAME: RENDER.C
  * PROGRAMMER: SA2
- * DATE: 13.06.2016
+ * DATE: 15.06.2016
  * PURPOSE: Render handle functions.
  */
 

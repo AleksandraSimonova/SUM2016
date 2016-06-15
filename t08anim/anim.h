@@ -1,6 +1,6 @@
  /* file name: anim.h
  *progremmer: sa2
- *date: 11.06.2016
+ *date: 15.06.2016
  */
 #ifndef  __ANIM_H_
 #define  __ANIM_H_
@@ -75,6 +75,7 @@ extern DBL
   SA2_RndProjDist, /* Near clip plane */
   SA2_RndFarClip,  /* Far clip plane */
   SA2_RndProjSize; /* Project plane size */
+extern UINT SA2_RndPrg;
 typedef struct
 {
   VEC  P;   /*Vertex position*/

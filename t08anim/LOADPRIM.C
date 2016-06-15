@@ -1,6 +1,6 @@
 /* FILE NAME: LOADPRIM.C
  * PROGRAMMER: SA2
- * DATE: 14.06.2016
+ * DATE: 15.06.2016
  */
 #include <stdio.h>         
 #include "anim.h"
