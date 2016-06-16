@@ -18,38 +18,12 @@ typedef struct
   sa2PRIM Pr;  /* Timer speed value*/
 } sa2UNIT_CUBE;
 
-/* Cube points */
-VEC CubeP[] =
-{
-  {-1, -1,  1},
-  { 1, -1,  1},
-  { 1, -1, -1},
-  {-1, -1, -1},
-  {-1,  1,  1},
-  { 1,  1,  1},
-  { 1,  1, -1},
-  {-1,  1, -1}
-};
-
-/* Cube edges */
-INT CubeE[][2] =
-{
-  {0, 1}, {1, 2}, {2, 3}, {3, 0},
-  {4, 5}, {5, 6}, {6, 7}, {7, 4},
-  {0, 4}, {1, 5}, {2, 6}, {3, 7}
-};
-
 /* Cube primitive */
-sa2PRIM Cube =
-{
-  CubeP, sizeof(CubeP) / sizeof(CubeP[0]),
-  CubeE, sizeof(CubeE) / sizeof(CubeE[0])
-};
 
 /* Unit cube initialization function.
  * ARGUMENTS:
  *   - self-pointer to unit object:
- *       sa2UNIT_CUBE *Uni;
+ *       sa2UNIT_CUBE *Uni;                                       
  *   - animation context:
  *       sa2ANIM *Ani;
  * RETURNS: None.

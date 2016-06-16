@@ -13,12 +13,12 @@ in vec3 DrawNormal;
 
 void main( void )
 {
-   /*
+   
   if (DrawPos.z > 33.5 + 35 * sin(5 * Time))
     //discard;
     OutColor = vec4(1, 0, 0, 1);//DrawColor
   else
-     */
+     
 
   vec3 L = normalize(vec3(1, 1, 1));
 

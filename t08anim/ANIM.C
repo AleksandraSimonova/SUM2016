@@ -13,6 +13,7 @@
 #pragma comment(lib, "glew32s")
 
 
+       
 #define SA2_GET_JOYSTICK_AXIS(A) \
   (2.0 * (ji.dw##A##pos - jc.w##A##min) / (jc.w##A##max - jc.w##A##min - 1) - 1)
 
@@ -191,11 +192,11 @@ VOID  SA2_AnimRender(VOID)
           
 
         /*axes*/                                                  
-        /* SA2_Anim.JX = SA2_GET_JOYSTIC_AXIS(X);
-         SA2_Anim.JY = SA2_GET_JOYSTIC_AXIS(Y);    
-         SA2_Anim.JZ = SA2_GET_JOYSTIC_AXIS(Z);
-         SA2_Anim.JR = SA2_GET_JOYSTIC_AXIS(R);
-         SA2_Anim.JPov = ji.dwPOV == 0xFFFF ? 0 : ji.dwPOV / 4500 + 1;    */    
+         SA2_Anim.JX = SA2_GET_JOYSTICK_AXIS(X);
+         SA2_Anim.JY = SA2_GET_JOYSTICK_AXIS(Y);    
+         SA2_Anim.JZ = SA2_GET_JOYSTICK_AXIS(Z);
+         SA2_Anim.JR = SA2_GET_JOYSTICK_AXIS(R);
+         SA2_Anim.JPov = ji.dwPOV == 0xFFFF ? 0 : ji.dwPOV / 4500 + 1;        
       }
     }
   }

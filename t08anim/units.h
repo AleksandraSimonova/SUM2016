@@ -7,4 +7,6 @@
 #include "anim.h"
 
 sa2UNIT * SA2_UnitCreateBall( VOID );
+sa2UNIT * SA2_UnitCreateCube( VOID );
+sa2UNIT * SA2_UnitCreate( VOID );
 #endif
