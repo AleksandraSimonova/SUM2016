@@ -57,7 +57,7 @@ VOID SA2_RndObjDraw( sa2OBJ *Obj )
   INT loc, mtl;
   MATR M, MSave;
 
-  for (i = 0; i < Obj->NumOfPrims; i++)
+  for (i = 0; i < Obj->NumOfPrims; i++)                                     
   {
     /* Build transform matrix */
     MSave = SA2_RndMatrWorld;
@@ -66,7 +66,7 @@ VOID SA2_RndObjDraw( sa2OBJ *Obj )
       MatrMulMatr(SA2_RndMatrView, SA2_RndMatrProj));
     glLoadMatrixf(M.A[0]);
     
-    glBegin(GL_LINES);
+    /*glBegin(GL_LINES);
       glColor3d(1, 0, 0);
       glVertex3d(0, 0, 0);
       glVertex4d(1, 0, 0, 0);
@@ -76,7 +76,7 @@ VOID SA2_RndObjDraw( sa2OBJ *Obj )
       glColor3d(0, 0, 1);
       glVertex3d(0, 0, 0);
       glVertex4d(0, 0, 1, 0);
-    glEnd();
+    glEnd(); */
    
 
     glUseProgram(SA2_RndPrg);
@@ -180,7 +180,7 @@ INT SA2_RndFindMaterial( CHAR *Name )
 */
 VOID SA2_RndLoadMaterials( CHAR *FileName )
 {
-  INT i, NumOfMaterials, x, y;
+  INT i, NumOfMaterials;
   UINT t;
   DWORD Sign;
   FILE *F;
@@ -210,7 +210,7 @@ VOID SA2_RndLoadMaterials( CHAR *FileName )
     /* Read image */
     if (M.TexW != 0 && M.TexH != 0 && M.TexNo != 0)
     {
-      /* Allocate memory for texture image */
+      /*Allocate memory for texture image*/ 
       if ((Image = malloc(M.TexW * M.TexH * M.TexNo)) == NULL)
       {
         fclose(F);

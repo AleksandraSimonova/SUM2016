@@ -80,9 +80,7 @@ VOID SA2_AnimInit( HWND hWnd )
 
   glClearColor(0.3, 0.5, 0.7, 1);
   glEnable(GL_DEPTH_TEST);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+ 
   SA2_RndPrg = SA2_RndShaderLoad("a");
   /* glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); */
 }
@@ -112,7 +110,7 @@ VOID  SA2_AnimClose( VOID )
 }
 VOID  SA2_AnimResize( INT W, INT H )
 {
-  HDC hDC;
+  
   SA2_Anim.W = W;
   SA2_Anim.H = H;
   glViewport(0, 0, W, H);
@@ -120,7 +118,7 @@ VOID  SA2_AnimResize( INT W, INT H )
   SA2_RndSetProj();
 }
 VOID  SA2_AnimCopyFrame( VOID )
-{
+{                                                 
   SwapBuffers(SA2_Anim.hDC);
 }
 VOID  SA2_AnimRender(VOID)

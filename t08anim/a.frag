@@ -1,10 +1,4 @@
 // version
-#version 330
-
-// output color
-layout(location = 0) out vec4 OutColor;
-
-// version
 #version 430
 
 // output color

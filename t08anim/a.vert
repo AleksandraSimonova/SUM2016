@@ -16,6 +16,7 @@ uniform mat4 MatrProj;
 out vec4 DrawColor;
 out vec3 DrawPos;
 out vec3 DrawNormal;
+out vec2 DrawTexCoord;
 
 void main( void )
 {

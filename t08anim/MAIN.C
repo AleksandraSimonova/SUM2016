@@ -95,7 +95,7 @@ LRESULT CALLBACK SA2_MyWindowFunc( HWND hWnd, UINT Msg,
     return 0;
   case WM_PAINT:
     hDC = BeginPaint(hWnd, &ps);
-    SA2_AnimCopyFrame(hDC);   
+    SA2_AnimCopyFrame();   
     EndPaint(hWnd, &ps);
     return 0;
   case WM_DESTROY:

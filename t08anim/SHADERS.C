@@ -26,7 +26,7 @@ static VOID SA2_RndShaderLog( CHAR *Stage, CHAR *Text )
     fprintf(F, "%s: %s\n", Stage, Text);
     fclose(F);
   }
-} /* End of 'SA2_RndShaderLoadTextFile' function */
+} /* End of 'SA4_RndShaderLoadTextFile' function */
 
 /* Text file load to memory function.
  * ARGUMENTS:

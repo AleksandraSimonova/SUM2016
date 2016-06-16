@@ -1,8 +1,9 @@
  /* file name: vec.h
  *progremmer: sa2
  *date: 15.06.2016
- */
+ */                   
 #ifndef  __VEC_H_ 
+#define  __VEC_H_ 
 
 
 #include <windows.h>

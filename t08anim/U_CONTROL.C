@@ -68,6 +68,13 @@ static VOID SA2_UnitResponse( sa2UNIT_CONTROL *Uni, sa2ANIM *Ani )
     Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(59 * Ani->Mdx * Ani->GlobalDeltaTime));
     Uni->Pos = PointTransform(Uni->Pos, MatrRotateX(59 * Ani->Mdy * Ani->GlobalDeltaTime));
   }  
+   if (Ani->KeysClick['R'])
+  {
+    SA2_RndShaderFree(SA2_RndPrg);
+    SA2_RndPrg = SA2_RndShaderLoad("a");
+  }
+  
+
 
   Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(59 * Ani->Keys[VK_RIGHT] * Ani->GlobalDeltaTime));
   Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(-59 * Ani->Keys[VK_LEFT] * Ani->GlobalDeltaTime)); 
