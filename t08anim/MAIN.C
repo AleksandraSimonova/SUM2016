@@ -47,7 +47,8 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 
   ShowWindow(hWnd, SW_SHOWNORMAL);
   UpdateWindow(hWnd);
-
+  
+  SA2_AnimAddUnit(SA2_UnitCreateControl());
   SA2_AnimAddUnit(SA2_UnitCreateBall());
   SA2_AnimAddUnit(SA2_UnitCreateCube());
   while (GetMessage(&msg, NULL, 0, 0))

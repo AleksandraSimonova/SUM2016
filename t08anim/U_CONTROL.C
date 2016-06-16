@@ -1,8 +1,8 @@
 /* file name: U_CONTROL.C
- *progremmer: sa2
+ *progrAmmer: sa2
  *date: 15.06.2016
  */
-#include <time.h>                   
+#include <string.h>                   
 
 
 
@@ -27,7 +27,7 @@ typedef struct
  */
 static VOID SA2_UnitInit( sa2UNIT_CONTROL *Uni, sa2ANIM *Ani )
 {
-  Uni->Pos = VecSet(Rnd0() * 5, Rnd0() * 5, Rnd0() * 5);
+  Uni->Pos = VecSet(0, 0, 3);
 } /* End of 'SA2_UnitInit' function */
 
 
@@ -53,8 +53,7 @@ static VOID SA2_UnitResponse( sa2UNIT_CONTROL *Uni, sa2ANIM *Ani )
     SA2_AnimAddUnit(SA2_UnitCreateBall());
   if (Ani->Keys['C'])
     SA2_AnimAddUnit(SA2_UnitCreateCube());
-  if (Ani->KeysClick[VK_RETURN] && Ani->Keys[VK_MENU])
-    SA2_AnimFlipFullScreen();                                         
+           
   if (Ani->KeysClick[VK_ESCAPE])
     SA2_AnimDoExit();
   if (Ani->KeysClick['P'])
@@ -68,15 +67,30 @@ static VOID SA2_UnitResponse( sa2UNIT_CONTROL *Uni, sa2ANIM *Ani )
   {
     Uni->Pos = VecMulMatr43(Uni->Pos, MatrRotateY(59 * Ani->Mdx * Ani->GlobalDeltaTime));
     Uni->Pos = VecMulMatr43(Uni->Pos, MatrRotateX(59 * Ani->Mdy * Ani->GlobalDeltaTime));
-  }
+  }  */
 
-  Uni->Pos = VecMulMatr43(Uni->Pos, MatrRotateY(59 * Ani->Keys[VK_RIGHT] * Ani->GlobalDeltaTime));
-  Uni->Pos = VecMulMatr43(Uni->Pos, MatrRotateY(-59 * Ani->Keys[VK_LEFT] * Ani->GlobalDeltaTime));
+  Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(59 * Ani->Keys[VK_RIGHT] * Ani->GlobalDeltaTime));
+  Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(-59 * Ani->Keys[VK_LEFT] * Ani->GlobalDeltaTime));
 
   r = VecLen(Uni->Pos);
-  Uni->Pos = VecMulNum(Uni->Pos, (r + Ani->Mdz * Ani->DeltaTime * 0.1) / r);  */
+  Uni->Pos = VecMulNum(Uni->Pos, (r + Ani->Mdz * Ani->DeltaTime * 0.1) / r);  
 
   SA2_RndMatrView = MatrView(Uni->Pos, VecSet(0, 0, 0), VecSet(0, 1, 0));
 
-} /* End of 'SA2_UnitResponse' function */
+}
+sa2UNIT * SA2_UnitCreateControl( VOID )
+{
+  sa2UNIT_CONTROL *Uni;
+
+  if ((Uni = (sa2UNIT_CONTROL *)SA2_AnimUnitCreate(sizeof(sa2UNIT_CONTROL))) == NULL)
+    return NULL;
+  /* Setup unit methods */
+  Uni->Init = (VOID *)SA2_UnitInit;
+
+  Uni->Response = (VOID *)SA2_UnitResponse;
+ 
+  return (sa2UNIT *)Uni;
+} /* End of 'SA2_UnitCreateCube' function */
+
+/* End of 'SA2_UnitResponse' function */
 

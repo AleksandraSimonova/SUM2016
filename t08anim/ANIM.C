@@ -1,7 +1,7 @@
 /* file name: anim.c
  *progremmer: sa2
  *date: 15.06.2016
- */
+ */                                
 #include <stdio.h>
 
 #include "anim.h"
@@ -13,10 +13,14 @@
 #pragma comment(lib, "glew32s")
 
 
-#define SA2_GET_JOYSTIC_AXIS(A) \ (2.0 * (ji.dw##A##pos - jc.dw##A##min) / (ji.dw##A##pos - jc.dw##A##min) - 1) - 1)
+#define SA2_GET_JOYSTICK_AXIS(A) \
+  (2.0 * (ji.dw##A##pos - jc.w##A##min) / (jc.w##A##max - jc.w##A##min - 1) - 1)
+
+
 
 INT SA2_MouseWheel;   
 sa2ANIM SA2_Anim;
+
 static UNIT64;
   SA2_StartTime;
   SA2_OldTime;
@@ -177,7 +181,7 @@ VOID  SA2_AnimRender(VOID)
     {
       
       JOYINFOEX ji;
-      ji.dwSize = sizeof(JOYINFOEX);
+      ji.dwSize = sizeof(JOYINFOEX);                                         
       ji.dwFlags = JOY_RETURNALL;
       if (joyGetPosEx(JOYSTICKID1, &ji) == JOYERR_NOERROR)
       {
@@ -186,12 +190,12 @@ VOID  SA2_AnimRender(VOID)
           SA2_Anim.JBut[i] = (ji.dwButtons >> i) & 1;
           
 
-        /*axes*/
-       /*  SA2_Anim.JX = SA2_GET_JOYSTIC_AXIS(X);
+        /*axes*/                                                  
+        /* SA2_Anim.JX = SA2_GET_JOYSTIC_AXIS(X);
          SA2_Anim.JY = SA2_GET_JOYSTIC_AXIS(Y);    
          SA2_Anim.JZ = SA2_GET_JOYSTIC_AXIS(Z);
          SA2_Anim.JR = SA2_GET_JOYSTIC_AXIS(R);
-         SA2_Anim.JPov = ji.dwPOV == 0xFFFF ? 0 : ji.dwPOV / 4500 + 1;         */
+         SA2_Anim.JPov = ji.dwPOV == 0xFFFF ? 0 : ji.dwPOV / 4500 + 1;    */    
       }
     }
   }
