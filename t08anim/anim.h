@@ -7,6 +7,7 @@
 #include "def.h"
 
 #define MAX_UNITS 1000
+#define SA2_MAX_MATERIALS 10000
 
 typedef struct tagsa2UNIT sa2UNIT;
 
@@ -66,16 +67,21 @@ VOID  SA2_AnimAddUnit( sa2UNIT *Uni );
 VOID SA2_AnimDoExit( VOID );
 VOID SA2_AnimFlipFullScren( VOID );
 sa2UNIT * SA2_AnimUnitCreate( INT Size );
-
+/* Global transformation matrices */
 extern MATR 
       SA2_RndMatrWorld,
       SA2_RndMatrView,
       SA2_RndMatrProj;
+/* Projection parameters */
 extern DBL
   SA2_RndProjDist, /* Near clip plane */
   SA2_RndFarClip,  /* Far clip plane */
   SA2_RndProjSize; /* Project plane size */
+/* Shader support */
 extern UINT SA2_RndPrg;
+/* Materials array */
+
+
 typedef struct
 {
   VEC  P;   /*Vertex position*/
@@ -86,32 +92,82 @@ typedef struct
 
 typedef struct
 {
-  INT VA;
-  INT VBuf;
-  INT IBuf; 
-  INT NumOfI;       /* Facets index array size */
+  INT VA;   /* Vertex array */
+  INT VBuf; /* Vertex buffer */
+  INT IBuf; /* Index buffer */
+  INT NumOfI;  /* Facets index array size */
+  MATR M; /* Primitive transformation matrix */
+  INT MtlNo; /* Material number */
 } sa2PRIM;
+typedef struct
+{
+  sa2PRIM *Prims;
+  INT NumOfPrims;
+} sa2OBJ;
 
+/* Material representation type */
+typedef struct
+{
+  CHAR Name[300]; /* Material name */
+  VEC Ka, Kd, Ks; /* Illumination coefficients */
+  FLT Ph, Trans;  /* Shininess and Phong, transparency */
+  INT TexW, TexH; /* Textiure image size */
+  INT TexNo;      /* For load: bytes per pixel, in use: OpenGL texture no */
+} sa2MTL;
 
+#define SA2_MAX_MATERIALS 10000
+extern sa2MTL SA2_RndMaterials[SA2_MAX_MATERIALS];
+extern INT SA2_RndNumOfMaterials;
 
-
-extern MATR SA2_RndMatrWorld, SA2_RndMatrView, SA2_RndMatrProj;
-extern DBL SA2_RndProjSize, SA2_RndProjDist, SA2_RndFarClip;
+/* Setup projection function.
+ * ARGUMENTS: None.
+ * RETURNS: None.
+ */
 VOID SA2_RndSetProj( VOID );
 
+/* Object draw function.
+ * ARGUMENTS:
+ *   - object structure pointer:
+ *       sa2OBJ *Obj;
+ * RETURNS: None.
+ */
+VOID SA2_RndObjDraw( sa2OBJ *Obj );
 
-VOID SA2_RndPrimDraw( sa2PRIM *Pr );
+/* Load object from '*.g3d' file function.
+ * ARGUMENTS:
+ *   - object structure pointer:
+ *       sa2OBJ *Obj;
+ *   - file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE is success, FALSE otherwise.
+ */
+BOOL SA2_RndObjLoad( sa2OBJ *Obj, CHAR *FileName );
 
+/* Object free function.
+ * ARGUMENTS:
+ *   - object structure pointer:
+ *       sa2OBJ *Obj;
+ * RETURNS: None.
+ */
+VOID SA2_RndObjFree( sa2OBJ *Obj );
 
-VOID SA2_RndPrimFree( sa2PRIM *Pr );
+/* Material find by name function.
+ * ARGUMENTS:
+ *   - material name:
+ *       CHAR *Name;
+ * RETURNS:
+ *   (INT) number of found material or -1 if no result.
+ */
+INT SA2_RndFindMaterial( CHAR *Name );
 
-
-BOOL SA2_RndPrimLoad( sa2PRIM *Pr, CHAR *FileName );
-
-VOID SA2_RndSetProj( VOID );
-
-
-VOID SA2_RndPrimDraw( sa2PRIM *Pr );
+/* Material load function.
+ * ARGUMENTS:
+ *   - material file name:
+ *       CHAR *FileName;
+ * RETURNS: None.
+*/
+VOID SA2_RndLoadMaterials( CHAR *FileName );
 
 extern INT S2_Anim;
 

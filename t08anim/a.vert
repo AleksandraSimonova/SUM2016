@@ -1,5 +1,5 @@
 // version
-#version 330
+#version 430
 
 // shader attributes layout
 layout(location = 0) in vec3 InPosition;
@@ -24,4 +24,5 @@ void main( void )
   DrawColor = InColor * (InTexCoord.x + InTexCoord.y); //vec4(InNormal * 2, 1);
   DrawPos = InPosition;
   DrawNormal = mat3(inverse(transpose(MatrWorld))) * InNormal;
+  DrawTexCoord = InTexCoord;
 }

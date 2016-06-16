@@ -2,11 +2,21 @@
  * PROGRAMMER: SA2
  * DATE: 15.06.2016
  */
-#include <stdio.h>         
+#include <stdio.h> 
+#include <string.h>
 #include "anim.h"
 
 
-BOOL SA2_RndPrimLoad(sa2PRIM * Pr, CHAR *FileName)
+/* Load object from '*.g3d' file function.
+ * ARGUMENTS:
+ *   - object structure pointer:
+ *       vg4OBJ *Obj;
+ *   - file name:
+ *       CHAR *FileName;
+ * RETURNS:
+ *   (BOOL) TRUE is success, FALSE otherwise.
+ */
+BOOL SA2_RndObjLoad( sa2OBJ *Obj, CHAR *FileName )
 {
   FILE *F;
   DWORD Sign;
@@ -19,7 +29,7 @@ BOOL SA2_RndPrimLoad(sa2PRIM * Pr, CHAR *FileName)
   sa2VERTEX *V;
   INT *I;
 
-  memset(Pr, 0, sizeof(sa2PRIM));
+  memset(Obj, 0, sizeof(sa2OBJ));
 
   F = fopen(FileName, "rb");
   if (F == NULL)
@@ -53,6 +63,16 @@ BOOL SA2_RndPrimLoad(sa2PRIM * Pr, CHAR *FileName)
   }
   fread(&NumOfPrimitives, 4, 1, F);
   fread(MtlFile, 1, 300, F);
+  SA2_RndLoadMaterials(MtlFile);
+
+  /* Allocate mnemory for primitives */
+  if ((Obj->Prims = malloc(sizeof(sa2PRIM) * NumOfPrimitives)) == NULL)
+  {
+    fclose(F);
+    return FALSE;
+  }
+  Obj->NumOfPrims = NumOfPrimitives;
+
   for (p = 0; p < NumOfPrimitives; p++)
   {
     /* Read primitive info */
@@ -61,31 +81,38 @@ BOOL SA2_RndPrimLoad(sa2PRIM * Pr, CHAR *FileName)
     fread(Mtl, 1, 300, F);
 
     /* Allocate memory for primitive */
-    if ((V = malloc(sizeof(sa2VERTEX) * NumOfV)) == NULL)
+    if ((V = malloc(sizeof(sa2VERTEX) * NumOfV + sizeof(INT) * NumOfI)) == NULL)
     {
+      while (p-- > 0)
+      {
+        glBindVertexArray(Obj->Prims[p].VA);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glDeleteBuffers(1, &Obj->Prims[p].VBuf);
+        glBindVertexArray(0);
+        glDeleteVertexArrays(1, &Obj->Prims[p].VA);
+        glDeleteBuffers(1, &Obj->Prims[p].IBuf);
+      }
+      free(Obj->Prims);
+      memset(Obj, 0, sizeof(sa2OBJ));
       fclose(F);
       return FALSE;
     }
-    if ((I = malloc(sizeof(INT) * NumOfI)) == NULL)
-    {
-      free(V);
-      V = NULL;
-      fclose(F);
-      return FALSE;
-    }
-    Pr->NumOfI = NumOfI;
+    I = (INT *)(V + NumOfV);
+    Obj->Prims[p].NumOfI = NumOfI;
+    Obj->Prims[p].M = MatrIdentity();
+    Obj->Prims[p].MtlNo = SA2_RndFindMaterial(Mtl);
     fread(V, sizeof(sa2VERTEX), NumOfV, F);
     fread(I, sizeof(INT), NumOfI, F);
 
     /* Create OpenGL buffers */
-    glGenVertexArrays(1, &Pr->VA);
-    glGenBuffers(1, &Pr->VBuf);
-    glGenBuffers(1, &Pr->IBuf);
+    glGenVertexArrays(1, &Obj->Prims[p].VA);
+    glGenBuffers(1, &Obj->Prims[p].VBuf);
+    glGenBuffers(1, &Obj->Prims[p].IBuf);
 
     /* Activate vertex array */
-    glBindVertexArray(Pr->VA);
+    glBindVertexArray(Obj->Prims[p].VA);
     /* Activate vertex buffer */
-    glBindBuffer(GL_ARRAY_BUFFER, Pr->VBuf);
+    glBindBuffer(GL_ARRAY_BUFFER, Obj->Prims[p].VBuf);
     /* Store vertex data */
     glBufferData(GL_ARRAY_BUFFER, sizeof(sa2VERTEX) * NumOfV, V, GL_STATIC_DRAW);
 
@@ -112,19 +139,16 @@ BOOL SA2_RndPrimLoad(sa2PRIM * Pr, CHAR *FileName)
     glEnableVertexAttribArray(3);
 
     /* Indices */
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Pr->IBuf);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Obj->Prims[p].IBuf);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INT) * NumOfI, I, GL_STATIC_DRAW);
 
     /* Disable vertex array */
     glBindVertexArray(0);
 
     free(V);
-    free(I);
-    break;
   }
   fclose(F);
   return TRUE;
-} /* End of 'SA2_RndPrimLoad' function */
+} /* End of 'SA2_RndObjLoad' function */
 
 /* END OF 'LOADPRIM.C' FILE */
-

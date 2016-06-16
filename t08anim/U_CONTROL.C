@@ -54,7 +54,7 @@ static VOID SA2_UnitResponse( sa2UNIT_CONTROL *Uni, sa2ANIM *Ani )
   if (Ani->Keys['C'])
     SA2_AnimAddUnit(SA2_UnitCreateCube());
            
-  if (Ani->KeysClick[VK_ESCAPE])
+  if (Ani->KeysClick[VK_ESCAPE])              
     SA2_AnimDoExit();
   if (Ani->KeysClick['P'])
     Ani->IsPause = !Ani->IsPause;
