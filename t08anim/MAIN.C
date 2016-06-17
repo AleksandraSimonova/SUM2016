@@ -19,6 +19,7 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   WNDCLASS wc;
   HWND hWnd; 
   MSG msg;
+  INT i;
 
   SetDbgMemHooks();
 
@@ -51,6 +52,11 @@ INT WINAPI WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
   SA2_AnimAddUnit(SA2_UnitCreateControl());
   SA2_AnimAddUnit(SA2_UnitCreateBall());
   SA2_AnimAddUnit(SA2_UnitCreateCube());
+  for(i = 0; i < 10; i++)
+  {
+
+    SA2_AnimAddUnit(SA2_UnitCreateStreet());
+  }
   while (GetMessage(&msg, NULL, 0, 0))
     DispatchMessage(&msg);
   return 30;

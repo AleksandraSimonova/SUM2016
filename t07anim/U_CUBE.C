@@ -102,7 +102,7 @@ static VOID SA2_UnitResponse( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
  */
 static VOID SA2_UnitRender( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
 {
-  SA2_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.1, 0.1, 0.1)),
+  SA2_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.4, 0.4, 0.4)),
                      MatrMulMatr(MatrRotateY((Uni->TimerSpeed * Ani->Time) * 30 + Uni->TimerShift),
                                  MatrTranslate(VecAddVec(Uni->Pos,
                                                          VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3)))));

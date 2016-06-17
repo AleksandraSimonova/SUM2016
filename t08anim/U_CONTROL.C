@@ -27,7 +27,7 @@ typedef struct
  */
 static VOID SA2_UnitInit( sa2UNIT_CONTROL *Uni, sa2ANIM *Ani )
 {
-  Uni->Pos = VecSet(0, 0, 3);
+  Uni->Pos = VecSet(2, 1, 3);
 } /* End of 'SA2_UnitInit' function */
 
 
@@ -53,19 +53,21 @@ static VOID SA2_UnitResponse( sa2UNIT_CONTROL *Uni, sa2ANIM *Ani )
     SA2_AnimAddUnit(SA2_UnitCreateBall());
   if (Ani->Keys['C'])
     SA2_AnimAddUnit(SA2_UnitCreateCube());
-           
+  if (Ani->Keys['L'])
+    SA2_AnimAddUnit(SA2_UnitCreateStreet());
+         
   if (Ani->KeysClick[VK_ESCAPE])              
     SA2_AnimDoExit();
   if (Ani->KeysClick['P'])
     Ani->IsPause = !Ani->IsPause;
 
-   /*Uni->Pos.Y += Ani->JY * Ani->GlobalDeltaTime; 
+ /*  Uni->Pos.Y += Ani->JY * Ani->GlobalDeltaTime; 
    Uni->Pos = PointTransform(Uni->Pos, MatrRotateX(59 * Ani->JY * Ani->GlobalDeltaTime));
-   Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(59 * Ani->JX * Ani->GlobalDeltaTime)); */
+   Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(59 * Ani->JX * Ani->GlobalDeltaTime));  */
 
   if (Ani->Keys[VK_LBUTTON])
   {
-    Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(59 * Ani->Mdx * Ani->GlobalDeltaTime));
+    Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(59 * Ani->Mdx * Ani->GlobalDeltaTime));    
     Uni->Pos = PointTransform(Uni->Pos, MatrRotateX(59 * Ani->Mdy * Ani->GlobalDeltaTime));
   }  
    if (Ani->KeysClick['R'])
@@ -75,9 +77,8 @@ static VOID SA2_UnitResponse( sa2UNIT_CONTROL *Uni, sa2ANIM *Ani )
   }
   
 
-
-  Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(59 * Ani->Keys[VK_RIGHT] * Ani->GlobalDeltaTime));
-  Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(-59 * Ani->Keys[VK_LEFT] * Ani->GlobalDeltaTime)); 
+  Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(1 * Ani->Keys[VK_RIGHT] * Ani->GlobalDeltaTime));
+  Uni->Pos = PointTransform(Uni->Pos, MatrRotateY(-1 * Ani->Keys[VK_LEFT] * Ani->GlobalDeltaTime)); 
 
   r = VecLen(Uni->Pos);
   Uni->Pos = VecMulNum(Uni->Pos, (r + Ani->Mdz * Ani->DeltaTime * 0.1) / r);  

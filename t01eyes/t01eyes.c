@@ -34,7 +34,8 @@ LRESULT CALLBACK MyWindowFunc( HWND hWnd, UINT Msg,
   HDC hDC;
   PAINTSTRUCT ps;
   POINT pt; 
-  static INT w, h;  
+  static INT w, h;
+  
 
   switch (Msg)
   {

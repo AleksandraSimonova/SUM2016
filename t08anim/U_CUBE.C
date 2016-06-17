@@ -30,11 +30,12 @@ typedef struct
  */
 static VOID SA2_UnitInit( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
 {
-  Uni->Pos = VecSet(Rnd0() * 5, Rnd0() * 5, Rnd0() * 5);
+  Uni->Pos = VecSet(/*Rnd0() * 5, Rnd0() * 5, Rnd0() * 5*/0, 0, -5);
   Uni->TimerShift = Rnd1() * 59;
   Uni->TimerSpeed = Rnd1() * 8;
   SA2_RndObjLoad(&Uni->Obj, "modela\\dodge.g3d");
-} /* End of 'SA2_UnitInit' function */
+ 
+} /* End of 'SA2_UnitInit' function */                        
 
 /* Unit cube deinitialization function.
  * ARGUMENTS:
@@ -59,11 +60,7 @@ static VOID SA2_UnitClose( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
  */
 static VOID SA2_UnitResponse( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
 {
- /* if (Ani ->Keys[VK_SPACE])
-    SA2_AnimAddUnit(SA2_UnitCreateBall()); */
- /* if (Ani ->Keys"C")
-    SA2_AnimAddUnit(SA2_UnitCreateCube());   */
-
+ 
 } /* End of 'SA2_UnitResponse' function */
 
 /* Unit render function.
@@ -77,12 +74,14 @@ static VOID SA2_UnitResponse( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
 static VOID SA2_UnitRender( sa2UNIT_CUBE *Uni, sa2ANIM *Ani )
 {
  
+  SA2_RndMatrWorld = MatrMulMatr(SA2_RndMatrWorld, MatrScale(VecSet(0.8F, 0.8F, 0.8F)),
+                MatrTranslate(VecAddVec(Uni->Pos, VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ),3)))); 
 
-  SA2_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.01F, 0.01F, 0.01F)),
+ /* SA2_RndMatrWorld = MatrMulMatr(MatrScale(VecSet(0.8F, 0.8F, 0.8F)),
                      MatrMulMatr(MatrRotateY((Uni->TimerSpeed * Ani->Time) * 30 + Uni->TimerShift),
                                  MatrTranslate(VecAddVec(Uni->Pos,
-                                                         VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3)))));  
-
+                                                         VecMulNum(VecSet(Ani->JX, Ani->JY, Ani->JZ), 3))))); */
+  
 
   SA2_RndObjDraw(&Uni->Obj);
 } /* End of 'SA2_UnitRender' function */

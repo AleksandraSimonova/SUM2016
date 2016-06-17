@@ -168,7 +168,7 @@ INT SA2_RndFindMaterial( CHAR *Name );
  * RETURNS: None.
 */
 VOID SA2_RndLoadMaterials( CHAR *FileName );
-VOID SA2_RndShaderFree( UINT Prg );
+VOID SA2_RndShaderFree( UINT Prg );                         
 UINT SA2_RndShaderLoad( CHAR *FileNamePrefix );
 
 

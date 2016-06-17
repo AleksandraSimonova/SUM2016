@@ -8,5 +8,6 @@
 
 sa2UNIT * SA2_UnitCreateBall( VOID );
 sa2UNIT * SA2_UnitCreateCube( VOID );
+sa2UNIT * SA2_UnitCreateStreet( VOID );
 sa2UNIT * SA2_UnitCreateControl( VOID );
 #endif
