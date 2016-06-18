@@ -43,14 +43,22 @@ __inline VEC VecSet( FLT X, FLT Y, FLT Z )
 
   return r;
 }
-__inline sa2COLOR Vec4Set( FLT R, FLT G, FLT B, FLT A )
+
+__inline VEC2 Vec2Set( FLT X, FLT Y)
 {
-  sa2COLOR v;
-  v.R = R, v.G = R, v.B = B, v.A = A;
+  VEC2 v;
+  v.X = X, v.Y = Y;
 
   return v;
 } 
 
+__inline sa2COLOR Vec4Set( FLT R, FLT G, FLT B, FLT A )
+{
+  sa2COLOR v;
+  v.R = R, v.G = G, v.B = B, v.A = A;
+
+  return v;
+} 
 
 __inline VEC VecAddVec( VEC A, VEC B )
 {

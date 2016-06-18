@@ -10,7 +10,7 @@
 /* Load object from '*.g3d' file function.
  * ARGUMENTS:
  *   - object structure pointer:
- *       vg4OBJ *Obj;
+ *       sa2OBJ *Obj;
  *   - file name:
  *       CHAR *FileName;
  * RETURNS:
@@ -19,7 +19,7 @@
 BOOL SA2_RndObjLoad( sa2OBJ *Obj, CHAR *FileName )
 {
   FILE *F;
-  DWORD Sign;
+  DWORD Sign, size;
   INT NumOfPrimitives;
   CHAR MtlFile[300];
   INT NumOfV;
@@ -29,7 +29,7 @@ BOOL SA2_RndObjLoad( sa2OBJ *Obj, CHAR *FileName )
   sa2VERTEX *V;
   INT *I;
 
-  memset(Obj, 0, sizeof(sa2OBJ));
+  SA2_RndObjCreate(Obj);
 
   F = fopen(FileName, "rb");
   if (F == NULL)
@@ -79,72 +79,24 @@ BOOL SA2_RndObjLoad( sa2OBJ *Obj, CHAR *FileName )
     fread(&NumOfV, 4, 1, F);
     fread(&NumOfI, 4, 1, F);
     fread(Mtl, 1, 300, F);
-
+    size = sizeof(sa2VERTEX) * NumOfV + sizeof(INT) * NumOfI;
     /* Allocate memory for primitive */
-    if ((V = malloc(sizeof(sa2VERTEX) * NumOfV + sizeof(INT) * NumOfI)) == NULL)
+    if ((V = malloc(size)) == NULL)
     {
       while (p-- > 0)
-      {
-        glBindVertexArray(Obj->Prims[p].VA);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        glDeleteBuffers(1, &Obj->Prims[p].VBuf);
-        glBindVertexArray(0);
-        glDeleteVertexArrays(1, &Obj->Prims[p].VA);
-        glDeleteBuffers(1, &Obj->Prims[p].IBuf);
-      }
+      SA2_RndPrimFree(&Obj->Prims[p]);
       free(Obj->Prims);
       memset(Obj, 0, sizeof(sa2OBJ));
       fclose(F);
       return FALSE;
     }
+    memset(V, 0, size);
     I = (INT *)(V + NumOfV);
-    Obj->Prims[p].NumOfI = NumOfI;
-    Obj->Prims[p].M = MatrIdentity();
+    /* Read primitive data */
+    fread(V, 1, size, F);
+    SA2_RndPrimCreate(&Obj->Prims[p], V, NumOfV, I, NumOfI);
     Obj->Prims[p].MtlNo = SA2_RndFindMaterial(Mtl);
-    fread(V, sizeof(sa2VERTEX), NumOfV, F);
-    fread(I, sizeof(INT), NumOfI, F);
-
-    /* Create OpenGL buffers */
-    glGenVertexArrays(1, &Obj->Prims[p].VA);
-    glGenBuffers(1, &Obj->Prims[p].VBuf);
-    glGenBuffers(1, &Obj->Prims[p].IBuf);
-
-    /* Activate vertex array */
-    glBindVertexArray(Obj->Prims[p].VA);
-    /* Activate vertex buffer */
-    glBindBuffer(GL_ARRAY_BUFFER, Obj->Prims[p].VBuf);
-    /* Store vertex data */
-    glBufferData(GL_ARRAY_BUFFER, sizeof(sa2VERTEX) * NumOfV, V, GL_STATIC_DRAW);
-
-    /* Setup data order */
-    /*                    layout,
-     *                      components count,
-     *                          type
-     *                                    should be normalize,
-     *                                           vertex structure size in bytes (stride),
-     *                                               offset in bytes to field start */
-    glVertexAttribPointer(0, 3, GL_FLOAT, FALSE, sizeof(sa2VERTEX),
-                          (VOID *)0); /* position */
-    glVertexAttribPointer(1, 2, GL_FLOAT, FALSE, sizeof(sa2VERTEX),
-                          (VOID *)sizeof(VEC)); /* texture coordinates */
-    glVertexAttribPointer(2, 3, GL_FLOAT, FALSE, sizeof(sa2VERTEX),
-                          (VOID *)(sizeof(VEC) + sizeof(VEC2))); /* normal */
-    glVertexAttribPointer(3, 4, GL_FLOAT, FALSE, sizeof(sa2VERTEX),
-                          (VOID *)(sizeof(VEC) * 2 + sizeof(VEC2))); /* color */
-
-    /* Enable used attributes */
-    glEnableVertexAttribArray(0);
-    glEnableVertexAttribArray(1);
-    glEnableVertexAttribArray(2);
-    glEnableVertexAttribArray(3);
-
-    /* Indices */
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, Obj->Prims[p].IBuf);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(INT) * NumOfI, I, GL_STATIC_DRAW);
-
-    /* Disable vertex array */
-    glBindVertexArray(0);
-
+    Obj->Prims[p].Id = p;
     free(V);
   }
   fclose(F);

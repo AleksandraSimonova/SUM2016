@@ -183,6 +183,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\GRID.C"
+				>
+			</File>
+			<File
 				RelativePath=".\IMAGE.C"
 				>
 			</File>
@@ -192,6 +196,18 @@
 			</File>
 			<File
 				RelativePath=".\MAIN.C"
+				>
+			</File>
+			<File
+				RelativePath=".\MTL.C"
+				>
+			</File>
+			<File
+				RelativePath=".\OBJ3D.C"
+				>
+			</File>
+			<File
+				RelativePath=".\PRIM.C"
 				>
 			</File>
 			<File
@@ -238,6 +254,10 @@
 			</File>
 			<File
 				RelativePath=".\def.h"
+				>
+			</File>
+			<File
+				RelativePath=".\GRID.H"
 				>
 			</File>
 			<File

@@ -98,12 +98,23 @@ typedef struct
   INT NumOfI;  /* Facets index array size */
   MATR M; /* Primitive transformation matrix */
   INT MtlNo; /* Material number */
+  INT Id; /* Primitive Id */
+
 } sa2PRIM;
 typedef struct
 {
-  sa2PRIM *Prims;
-  INT NumOfPrims;
+  sa2PRIM *Prims; /* Primitives array */
+  INT NumOfPrims; /* Primitives array size */
+  MATR M;         /* Object transformation matrix */
 } sa2OBJ;
+
+/* Grid geometry representation type */
+typedef struct
+{
+  INT W, H;     /* Grid size in vertices */
+  sa2VERTEX *V; /* Grid points */
+} sa2GRID;
+
 
 /* Material representation type */
 typedef struct
@@ -167,6 +178,7 @@ INT SA2_RndFindMaterial( CHAR *Name );
  *       CHAR *FileName;
  * RETURNS: None.
 */
+
 VOID SA2_RndLoadMaterials( CHAR *FileName );
 VOID SA2_RndShaderFree( UINT Prg );                         
 UINT SA2_RndShaderLoad( CHAR *FileNamePrefix );

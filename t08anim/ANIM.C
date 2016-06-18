@@ -7,7 +7,7 @@
 #include "anim.h"
 #include <mmsystem.h>
 
-#pragma comment(lib, "winmm")
+#pragma comment(lib, "winmm")                  
 #pragma comment(lib, "opengl32")
 #pragma comment(lib, "glu32")
 #pragma comment(lib, "glew32s")
@@ -21,13 +21,13 @@
 
 INT SA2_MouseWheel;   
 sa2ANIM SA2_Anim;
-
-static UNIT64;
-  SA2_StartTime;
-  SA2_OldTime;
-  SA2_OldTimeFPS;
-  SA2_PauseTime;
-  SA2_TimePerSec;
+                                   
+static UINT64
+  SA2_StartTime,
+  SA2_OldTime,
+  SA2_OldTimeFPS,
+  SA2_PauseTime,
+  SA2_TimePerSec,
   SA2_FrameCounter;
 
 VOID SA2_AnimInit( HWND hWnd )
@@ -153,7 +153,7 @@ VOID  SA2_AnimRender(VOID)
     SA2_FrameCounter = 0;
   }
   SA2_OldTime = t.QuadPart;
-
+                                                      
   /* Update keyboard */
   GetKeyboardState(SA2_Anim.Keys);
   for (i = 0; i < 256; i++)

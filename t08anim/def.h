@@ -34,6 +34,9 @@ typedef FLOAT FLT;
 typedef DOUBLE DBL;
 
 #include "vec.h"
+typedef __int64 INT64;
+typedef unsigned __int64 UINT64;
+
 
 #endif /* __DEF_H_ */
 

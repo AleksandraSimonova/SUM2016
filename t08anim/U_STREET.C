@@ -31,7 +31,7 @@ typedef struct
 static VOID SA2_UnitInit( sa2UNIT_STREET *Uni, sa2ANIM *Ani )
 {
   INT i;
-  Uni->Pos = VecSet(/*Rnd0() * 5, Rnd0() * 5, Rnd0() * 5*/0, -3.5, 0);
+  Uni->Pos = VecSet(/*Rnd0() * 5, Rnd0() * 5, Rnd0() * 5*/0, -2.5, 0);
   Uni->TimerShift = /*Rnd1() * 59*/ 0;
   Uni->TimerSpeed = /*Rnd1() * 8*/ 0;
   SA2_RndObjLoad(&Uni->Obj, "modela\\street.g3d");
